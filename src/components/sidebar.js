@@ -2,13 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 const SidebarContainer = styled.div`
-  display: flex;
+  flex: ${props => props.flex ? props.flex : 1};
+  height: 100vh;
 `
 
 export const Sidebar = ({...props}) => {
   return (
-    <div className='sidebar-wrapper'>
-    
-    </div>
+    <SidebarContainer {...props}>
+      <p>Sidebar</p>
+    </SidebarContainer>
   )
 }
