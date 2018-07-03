@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "simple server for serving images",
+  "main": "index.js",
+  "author": "shoulderkarlsson",
+  "license": "MIT",
+  "scripts": {
+    "start": "backpack"
+  },
+  "dependencies": {
+    "micro": "^9.3.2"
+  },
+  "devDependencies": {
+    "backpack-core": "^0.7.0"
+  }
+}
