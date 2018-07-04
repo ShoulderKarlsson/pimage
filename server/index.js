@@ -1,21 +1,28 @@
-const {send} = require('micro')
+const {send, createError} = require('micro')
 const {router, get} = require('microrouter')
 const fs = require('fs')
 const util = require('util')
 const path = require('path')
 const logging = require('./src/lib/logging.js')
+const handler = require('serve-handler')
+
 
 const readDirP = util.promisify(fs.readdir)
 const lstatP = util.promisify(fs.lstat)
 
-const getImages = get('/images', async (req, res) => {
+const indexRoute = get('/', (req, res) => {
+  return send(res, 200, '/')
+})
+
+
+const getImageFolders = get('/images', async (req, res) => {
 
   // Not sure if the || [] is ugly?
   // Maybe concider adding check instead
   const imageFolders = await readDirP('./images')
     .catch(error => {
-      console.log(error)
-      return send(res, 400, JSON.stringify({error: 'Error while trying to read images folder..'}))
+      logging.error(error)
+      return createError(500, 'Internal Server Error')
     })
 
   const imageFolderNames = await imageFolders
@@ -25,7 +32,9 @@ const getImages = get('/images', async (req, res) => {
       if (fileStat.isDirectory()) {
         return [...acc, curr]
       } else {
-        logging.warning(`Found path that was not a folder, consider moving this. File > ${curr}`)
+        logging.warning(
+          `Found path that was not a folder, consider moving this. File > ${curr}`
+        )
         return acc
       }
     }, Promise.resolve([]))
@@ -34,9 +43,48 @@ const getImages = get('/images', async (req, res) => {
 })
 
 
+const getImages = get('/images/:folderName/:image', async (req, res) => {
+  const {folderName = '', image = ''} = req.params
 
-const indexRoute = get('/', (req, res) => {
-  return send(res, 200, JSON.stringify({message: 'Hello Micro  world!'}))
+  if (!folderName || !image) {
+    logging.error('foldername or image was not specified.')
+    return send(res, 400, JSON.stringify({body: 'Must include `foldername` and `image` in request.'}))
+  }
+  
+  const folderStat = await lstatP(path.join(__dirname + `/images/${folderName}`))
+    .catch(error => {
+      logging.warning(`${folderName} was not a folder`)
+      return false
+    })
+
+
+  if (!folderStat || !folderStat.isDirectory()) {
+    return send(res, 400, JSON.stringify({body: `${folderName} was not a folder`}))
+  }
+
+  const imageStat = await lstatP(path.join(__dirname + `/images/${folderName}/${image}`))
+    .catch(error => {
+      logging.warning(`No such file ${image}`)
+      return false
+    })
+
+  if (!imageStat) {
+    return send(res, 400, JSON.stringify({body: `No such file ${image}`}))
+  }
+
+
+
+
+  // If everything went ok, serve image
+  return handler(req, res)
 })
 
-module.exports = router(getImages)
+
+
+
+
+module.exports = router(
+  indexRoute,
+  getImageFolders,
+  getImages
+)
