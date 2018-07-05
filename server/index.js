@@ -43,7 +43,7 @@ const getImageFolders = get('/images', async (req, res) => {
 })
 
 
-const getImages = get('/images/:folderName/:image', async (req, res) => {
+const getImage = get('/images/:folderName/:image', async (req, res) => {
   const {folderName = '', image = ''} = req.params
 
   if (!folderName || !image) {
@@ -79,6 +79,28 @@ const getImages = get('/images/:folderName/:image', async (req, res) => {
   return handler(req, res)
 })
 
+const getImages = get('/images/:folderName', async (req, res) => {
+  const {folderName} = req.params
+  const folderReadResult = await readDirP(path.join(__dirname + `/images/${folderName}`))
+    .catch(error => {
+      logging.error(error)
+      return {
+        ok: false,
+        message: 'Error while trying to read folder',
+        raw: error
+      }
+    })
+
+  if (folderReadResult.hasOwnProperty('ok') && folderReadResult.ok === false) {
+    logging.warning(`Could not read folder > ${folderName} <, maybe it does not exists inside the images folder?`)
+    return send(res, 400, JSON.stringify({body: folderReadResult.message}))
+  }
+
+  const payload = folderReadResult.map(image => `/images/${folderName}/${image}`)
+
+  return send(res, 200, JSON.stringify({body: payload}))
+})
+
 
 
 
@@ -86,5 +108,6 @@ const getImages = get('/images/:folderName/:image', async (req, res) => {
 module.exports = router(
   indexRoute,
   getImageFolders,
+  getImage,
   getImages
 )
