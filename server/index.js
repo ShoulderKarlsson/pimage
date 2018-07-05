@@ -39,7 +39,9 @@ const getImageFolders = get('/images', async (req, res) => {
       }
     }, Promise.resolve([]))
 
-  return send(res, 200, JSON.stringify({body: imageFolderNames}))
+  // Cannot chain on reduce since its async i 
+  const payload = imageFolderNames.map(folderName => `/images/${folderName}`)
+  return send(res, 200, JSON.stringify({body: payload}))
 })
 
 
