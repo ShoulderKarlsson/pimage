@@ -5,17 +5,19 @@ const util = require('util')
 const path = require('path')
 const logging = require('./src/lib/logging.js')
 const handler = require('serve-handler')
+const cors = require('micro-cors')()
 
 
 const readDirP = util.promisify(fs.readdir)
 const lstatP = util.promisify(fs.lstat)
 
-const indexRoute = get('/', (req, res) => {
+const indexRoute = get('/', cors((req, res) => {
   return send(res, 200, '/')
-})
+}))
 
 
-const getImageFolders = get('/images', async (req, res) => {
+const getImageFolders = get('/images', cors(async (req, res) => {
+  logging.debug('Starting request!')
 
   // Not sure if the || [] is ugly?
   // Maybe concider adding check instead
@@ -40,17 +42,20 @@ const getImageFolders = get('/images', async (req, res) => {
     }, Promise.resolve([]))
 
   // Cannot chain on reduce since its async i 
-  const payload = imageFolderNames.map(folderName => `/images/${folderName}`)
-  return send(res, 200, JSON.stringify({body: payload}))
-})
+  const payload = imageFolderNames.map(folderName => ({
+    path: `/images/${folderName}`,
+    name: folderName
+  }))
+  return send(res, 200, {body: payload})
+}))
 
 
-const getImage = get('/images/:folderName/:image', async (req, res) => {
+const getImage = get('/images/:folderName/:image', cors(async (req, res) => {
   const {folderName = '', image = ''} = req.params
 
   if (!folderName || !image) {
     logging.error('foldername or image was not specified.')
-    return send(res, 400, JSON.stringify({body: 'Must include `foldername` and `image` in request.'}))
+    return send(res, 400, {body: 'Must include `foldername` and `image` in request.'})
   }
   
   const folderStat = await lstatP(path.join(__dirname + `/images/${folderName}`))
@@ -61,7 +66,7 @@ const getImage = get('/images/:folderName/:image', async (req, res) => {
 
 
   if (!folderStat || !folderStat.isDirectory()) {
-    return send(res, 400, JSON.stringify({body: `${folderName} was not a folder`}))
+    return send(res, 400, {body: `${folderName} was not a folder`})
   }
 
   const imageStat = await lstatP(path.join(__dirname + `/images/${folderName}/${image}`))
@@ -71,7 +76,7 @@ const getImage = get('/images/:folderName/:image', async (req, res) => {
     })
 
   if (!imageStat) {
-    return send(res, 400, JSON.stringify({body: `No such file ${image}`}))
+    return send(res, 400, {body: `No such file ${image}`})
   }
 
 
@@ -79,9 +84,9 @@ const getImage = get('/images/:folderName/:image', async (req, res) => {
 
   // If everything went ok, serve image
   return handler(req, res)
-})
+}))
 
-const getImages = get('/images/:folderName', async (req, res) => {
+const getImages = get('/images/:folderName', cors(async (req, res) => {
   const {folderName} = req.params
   const folderReadResult = await readDirP(path.join(__dirname + `/images/${folderName}`))
     .catch(error => {
@@ -95,17 +100,13 @@ const getImages = get('/images/:folderName', async (req, res) => {
 
   if (folderReadResult.hasOwnProperty('ok') && folderReadResult.ok === false) {
     logging.warning(`Could not read folder > ${folderName} <, maybe it does not exists inside the images folder?`)
-    return send(res, 400, JSON.stringify({body: folderReadResult.message}))
+    return send(res, 400, {body: folderReadResult.message})
   }
 
   const payload = folderReadResult.map(image => `/images/${folderName}/${image}`)
 
-  return send(res, 200, JSON.stringify({body: payload}))
-})
-
-
-
-
+  return send(res, 200, {body: payload})
+}))
 
 module.exports = router(
   indexRoute,
