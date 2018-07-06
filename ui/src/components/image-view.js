@@ -2,31 +2,21 @@ import React from 'react'
 import {compose, mapProps, shouldUpdate} from 'recompose'
 import {withFetch} from 'with-fetch'
 import fetch from 'isomorphic-fetch'
+import styled from 'styled-components'
 
 
-/**
- *
- * Old implementation, this can be used when with-fetch is fixed..?
- *
- */
-// const enhance = compose(
-//   mapProps(({location, ...props}) => ({
-//     path: location.pathname,
-//     ...props
-//   })),
-//   withFetch(({path}) => fetch(`http://localhost:5000${path}`))
-// )
-// const StatelessImageView = ({...props}) => {
-//   console.log(props.data)
-//   return (
-//     <div>
-//       {props.path}
-//     </div>
-//   )
-// }
-// export const ImageView = enhance(StatelessImageView)
+const ImageViewContainer = styled.div`
+  
+`
 
 export class ImageView extends React.Component {
+  state = {
+    images: []
+  }
+
+  constructor(props) {
+    super(props)
+  }
 
   componentDidMount() {
     this.fetchImages()
@@ -36,15 +26,15 @@ export class ImageView extends React.Component {
     fetch(`http://localhost:5000${this.props.location.pathname}`)
     .then(res => res.ok ? res : Promise.reject(res))
     .then(res => res.json())
-    .then(images => {
-      console.log('images', images)
-    })
+    .then(({body}) => this.setState(() => ({images: body})))
     .catch(error => {
       console.log(error)
     })
   }
 
   componentDidUpdate(prevProps, prevState) {
+
+    // new path means new folder, therefore fetch new images
     if (prevProps.location.pathname !== this.props.location.pathname) {
       this.fetchImages()
     }
@@ -52,9 +42,23 @@ export class ImageView extends React.Component {
 
   render() {
     return (
-      <div></div>
+      <ImageViewContainer>
+        {this.state.images.map((path, i) => {
+          return (
+            <Image uri={`http://localhost:5000${path}`} />
+          )
+        })}
+      </ImageViewContainer>
     )
   }
 }
 
 
+// ========================================================
+
+const Image = styled.div`
+  height: 100px;
+  width: 100px;
+  background: url(${props => props.uri}) no-repeat;
+  background-size: cover;
+`
