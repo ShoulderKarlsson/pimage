@@ -18,7 +18,6 @@ const enhance = compose(
 )
 
 export const Sidebar = enhance(({data, loading, ...props}) => {
-  console.log('rendering sidebar')
   return (
     <SidebarContainer>
       {

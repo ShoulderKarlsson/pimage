@@ -15,17 +15,7 @@ const SidebarLinkContainer = styled.div`
   width: 100px;
 `
 
-// const StyledLink = styled(Link)`
-//   text-decoration: none;
-//   color: ${props => props.color ? props.color : 'initial'};
-//   marginLeft: 3px;
-//   background-color: purple;
-// `
-//
-
-
 export const SidebarLink = withRouter(({name, path, isActive, history, ...props}) => {
-  console.log(props)
   return (
     <SidebarLinkContainer onClick={() => history.push(path)}>
       <div className='folder-container'>

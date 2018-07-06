@@ -45,7 +45,7 @@ export class ImageView extends React.Component {
       <ImageViewContainer>
         {this.state.images.map((path, i) => {
           return (
-            <Image uri={`http://localhost:5000${path}`} />
+            <Image key={i} uri={`http://localhost:5000${path}`} />
           )
         })}
       </ImageViewContainer>
