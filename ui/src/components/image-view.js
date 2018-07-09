@@ -1,64 +1,50 @@
 import React from 'react'
-import {compose, mapProps, shouldUpdate} from 'recompose'
-import {withFetch} from 'with-fetch'
 import fetch from 'isomorphic-fetch'
 import styled from 'styled-components'
-
+import Masonry from 'react-masonry-component'
+import { compose, lifecycle, withState, withHandlers } from 'recompose'
 
 const ImageViewContainer = styled.div`
-  
+  display: flex;
 `
 
-export class ImageView extends React.Component {
-  state = {
-    images: []
-  }
-
-  constructor(props) {
-    super(props)
-  }
-
-  componentDidMount() {
-    this.fetchImages()
-  }
-
-  fetchImages() {
-    fetch(`http://localhost:5000${this.props.location.pathname}`)
-    .then(res => res.ok ? res : Promise.reject(res))
-    .then(res => res.json())
-    .then(({body}) => this.setState(() => ({images: body})))
-    .catch(error => {
-      console.log(error)
-    })
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-
-    // new path means new folder, therefore fetch new images
-    if (prevProps.location.pathname !== this.props.location.pathname) {
-      this.fetchImages()
-    }
-  }
-
-  render() {
-    return (
-      <ImageViewContainer>
-        {this.state.images.map((path, i) => {
-          return (
-            <Image key={i} uri={`http://localhost:5000${path}`} />
-          )
-        })}
-      </ImageViewContainer>
-    )
-  }
-}
-
-
-// ========================================================
-
-const Image = styled.div`
-  height: 100px;
-  width: 100px;
-  background: url(${props => props.uri}) no-repeat;
-  background-size: cover;
+const Image = styled.img`
+  width: 40%;
+  height: auto;
 `
+
+const enhance = compose(
+  withState('images', 'setImages', []),
+  withHandlers({
+    fetchImages: ({ location, setImages }) => () => {
+      fetch(`http://localhost:5000${location.pathname}`)
+        .then(res => (res.ok ? res : Promise.reject(res)))
+        .then(res => res.json())
+        .then(({ body }) => setImages(body))
+        .catch(error => {
+          console.log(error)
+        })
+    },
+  }),
+  lifecycle({
+    componentDidMount() {
+      this.props.fetchImages()
+    },
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.location.pathname !== this.props.location.pathname) {
+        this.props.fetchImages()
+      }
+    },
+  }),
+)
+
+export const ImageView = enhance(({ images }) => {
+  return (
+    <Masonry>
+      {images.map((path, i) => (
+        <Image key={i} src={`http://localhost:5000${path}`} />
+      ))}
+    </Masonry>
+  )
+})
