@@ -9,9 +9,13 @@ const ImageViewContainer = styled.div`
 `
 
 const Image = styled.img`
-  width: 40%;
   height: auto;
 `
+
+const randomImageSize = () => {
+  const sizes = [20, 30, 40]
+  return `${sizes[Math.floor(Math.random() * sizes.length)]}%`
+}
 
 const enhance = compose(
   withState('images', 'setImages', []),
@@ -41,10 +45,22 @@ const enhance = compose(
 
 export const ImageView = enhance(({ images }) => {
   return (
-    <Masonry>
-      {images.map((path, i) => (
-        <Image key={i} src={`http://localhost:5000${path}`} />
-      ))}
-    </Masonry>
+    <div
+      style={{
+        backgroundColor: 'orange',
+        height: '100vh',
+        overflow: 'scroll',
+      }}
+    >
+      <Masonry>
+        {images.map((path, i) => (
+          <Image
+            style={{ width: randomImageSize(), margin: 6 }}
+            key={i}
+            src={`http://localhost:5000${path}`}
+          />
+        ))}
+      </Masonry>
+    </div>
   )
 })
