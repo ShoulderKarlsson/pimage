@@ -8,12 +8,9 @@ const ImageViewContainer = styled.div`
   display: flex;
 `
 
-const Image = styled.img`
-  height: auto;
-`
-
 const randomImageSize = () => {
-  const sizes = [20, 30, 40]
+  // const sizes = [20, 30, 40]
+  const sizes = [15, 25, 35]
   return `${sizes[Math.floor(Math.random() * sizes.length)]}%`
 }
 
@@ -54,13 +51,14 @@ export const ImageView = enhance(({ images }) => {
     >
       <Masonry>
         {images.map((path, i) => (
-          <Image
-            style={{ width: randomImageSize(), margin: 6 }}
-            key={i}
+          <img
+            alt="image"
             src={`http://localhost:5000${path}`}
+            style={{ height: 'auto', width: randomImageSize() }}
           />
         ))}
       </Masonry>
     </div>
   )
 })
+
