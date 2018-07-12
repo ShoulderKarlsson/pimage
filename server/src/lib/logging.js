@@ -6,8 +6,10 @@ const getLoggingDate = () => {
 }
 
 module.exports = {
-  warning: message => console.log(chalk.yellow(`[Warning] - ${getLoggingDate()} >> ${message}`)),
-  error: message => console.log(chalk.red(`[Error] - ${getLoggingDate()} >> ${message}`)),
-  debug: message => console.log(chalk.magenta(`[Debug] - ${getLoggingDate()} >> ${message}`)),
+  warning: message =>
+    console.log(chalk.yellow(`[Warning] - ${getLoggingDate()} >> ${message}`)),
+  error: message =>
+    console.log(chalk.red(`[Error] - ${getLoggingDate()} >> ${message}`)),
+  debug: message =>
+    console.log(chalk.magenta(`[Debug] - ${getLoggingDate()} >> ${message}`)),
 }
-
