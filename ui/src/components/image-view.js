@@ -1,18 +1,11 @@
 import React from 'react'
 import fetch from 'isomorphic-fetch'
 import styled from 'styled-components'
-import Masonry from 'react-masonry-component'
 import { compose, lifecycle, withState, withHandlers } from 'recompose'
 
 const ImageViewContainer = styled.div`
   display: flex;
 `
-
-const randomImageSize = () => {
-  // const sizes = [20, 30, 40]
-  const sizes = [15, 25, 35]
-  return `${sizes[Math.floor(Math.random() * sizes.length)]}%`
-}
 
 const enhance = compose(
   withState('images', 'setImages', []),
@@ -39,26 +32,3 @@ const enhance = compose(
     },
   }),
 )
-
-export const ImageView = enhance(({ images }) => {
-  return (
-    <div
-      style={{
-        backgroundColor: 'orange',
-        height: '100vh',
-        overflow: 'scroll',
-      }}
-    >
-      <Masonry>
-        {images.map((path, i) => (
-          <img
-            alt="image"
-            src={`http://localhost:5000${path}`}
-            style={{ height: 'auto', width: randomImageSize() }}
-          />
-        ))}
-      </Masonry>
-    </div>
-  )
-})
-
