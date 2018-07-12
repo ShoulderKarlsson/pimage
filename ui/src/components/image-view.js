@@ -3,10 +3,6 @@ import fetch from 'isomorphic-fetch'
 import styled from 'styled-components'
 import { compose, lifecycle, withState, withHandlers } from 'recompose'
 
-const ImageViewContainer = styled.div`
-  display: flex;
-`
-
 const enhance = compose(
   withState('images', 'setImages', []),
   withHandlers({
@@ -32,3 +28,24 @@ const enhance = compose(
     },
   }),
 )
+
+export const ImageView = enhance(({ images }) => {
+  return (
+    <div>
+      {images.map((imagePath, i) => {
+        return (
+          <img
+            style={{
+              maxWidth: 500,
+              maxHeight: 300,
+              width: 'auto',
+              height: 'auto',
+            }}
+            key={i}
+            src={`http://localhost:5000${imagePath}`}
+          />
+        )
+      })}
+    </div>
+  )
+})
