@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    browser: true,
+    // browser: true,
     es6: true,
   },
   extends: 'eslint:recommended',
@@ -17,6 +17,6 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
-    "react/jsx-uses-vars": 2
+    'react/jsx-uses-vars': 2,
   },
-};
+}
