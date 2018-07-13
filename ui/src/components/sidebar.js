@@ -7,8 +7,8 @@ import { SidebarLink } from './sidebar-link.js'
 import { Loading } from './loading.js'
 
 const SidebarContainer = styled.div`
-  flex: ${props => (props.flex ? props.flex : 1)};
   height: 100vh;
+  width: 20%;
   flex-direction: column;
   background: #0e1219;
 `
@@ -42,19 +42,12 @@ export const Sidebar = enhance(({ folderData, currentPath, ...props }) => {
   )
 })
 
-const Folders = ({ data, activePath }) => {
-  const amountOfImages = data.length
-  return (
-    <React.Fragment>
-      {data.map(({ path, name }, i) => (
-        <SidebarLink
-          amountOfImages={amountOfImages}
-          isActive={activePath === path}
-          path={path}
-          name={name}
-          key={i}
-        />
-      ))}
-    </React.Fragment>
-  )
-}
+const Folders = ({ data, activePath }) =>
+  data.map(({ path, name }, i) => (
+    <SidebarLink
+      isActive={activePath === path}
+      path={path}
+      name={name}
+      key={i}
+    />
+  ))
