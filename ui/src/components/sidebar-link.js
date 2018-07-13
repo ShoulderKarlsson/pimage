@@ -7,7 +7,6 @@ import { Text } from './common.js'
 const SidebarLinkContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 10px;
   height: 128px;
   background: #0e1219;
   align-items: center;
@@ -24,7 +23,7 @@ const TextContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${props => props.backgroundcolor};
+  background: ${props => props.backgroundColor};
   flex-direction: column;
 `
 
@@ -33,7 +32,7 @@ export const SidebarLink = withRouter(({ name, path, isActive, history }) => {
     <SidebarLinkContainer onClick={() => history.push(path)}>
       <Filling background={isActive ? '#feb15f' : '#0e1219'} />
       <TextContainer
-        backgroundcolor={isActive ? 'rgba(29, 35, 45, 0.85)' : 'inherit'}
+        backgroundColor={isActive ? 'rgba(29, 35, 45, 0.85)' : 'inherit'}
       >
         <Text size={'medium'}>{name}</Text>
       </TextContainer>
