@@ -6,7 +6,6 @@ const OverlayContainer = styled.div`
   width: 100%;
   background-color: rgba(56, 53, 53, 0.65);
   display: flex;
-  position: fixed;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -30,21 +29,14 @@ const Content = styled.div`
   align-items: center;
 `
 
-export const Overlay = ({
-  children,
-  style = {},
-  onCloseButtonPress,
-  ...props
-}) => {
-  return (
-    <OverlayContainer style={style}>
-      <Topbar>
-        <div
-          onClick={onCloseButtonPress}
-          style={{ height: '20px', width: '20px', background: 'green' }}
-        />
-      </Topbar>
-      <Content>{children}</Content>
-    </OverlayContainer>
-  )
-}
+export const Overlay = ({ children, style = {}, onCloseButtonPress }) => (
+  <OverlayContainer className="overlay-container" style={style}>
+    <Topbar>
+      <div
+        onClick={onCloseButtonPress}
+        style={{ height: '20px', width: '20px', background: 'green' }}
+      />
+    </Topbar>
+    <Content>{children}</Content>
+  </OverlayContainer>
+)
