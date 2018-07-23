@@ -33,9 +33,8 @@ const enhance = compose(
 
     componentDidUpdate(prevProps) {
       if (prevProps.location.pathname !== this.props.location.pathname) {
-
         // Must close the full-preview of the image if the route changes
-        if (!!this.props.activeImage) {
+        if (this.props.activeImage) {
           this.props.setActiveImage('')
         }
         this.props.fetchImages()
@@ -49,7 +48,6 @@ export const ImageView = enhance(({ images, activeImage, setActiveImage }) => {
     <div
       style={{
         height: '100vh',
-        width: '100%',
         overflow: 'scroll',
         display: 'flex',
         justifyContent: 'space-around',
@@ -57,21 +55,23 @@ export const ImageView = enhance(({ images, activeImage, setActiveImage }) => {
         flexWrap: 'wrap',
       }}
     >
-      {!!activeImage && (
+      {/* This is probably not optimal, but going with this for now since images are chaced. */}
+      {activeImage ? (
         <Overlay onCloseButtonPress={() => setActiveImage('')}>
-          <Image src={activeImage} height={'86%'} />
+          <Image src={activeImage} height={'100%'} />
         </Overlay>
+      ) : (
+        images.map((imagePath, i) => {
+          const fullPath = `http://localhost:5000${imagePath}`
+          return (
+            <Image
+              onClick={() => setActiveImage(fullPath)}
+              key={i}
+              src={fullPath}
+            />
+          )
+        })
       )}
-      {images.map((imagePath, i) => {
-        const fullPath = `http://localhost:5000${imagePath}`
-        return (
-          <Image
-            onClick={() => setActiveImage(fullPath)}
-            key={i}
-            src={fullPath}
-          />
-        )
-      })}
     </div>
   )
 })
