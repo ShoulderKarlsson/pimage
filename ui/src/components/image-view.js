@@ -6,16 +6,27 @@ import withHandlers from 'recompose/withHandlers'
 import lifecycle from 'recompose/lifecycle'
 import withState from 'recompose/withState'
 import { Overlay } from './overlay'
+import { ImageCirculation } from './image-circulation.js'
 
-const Image = styled.img`
-  height: ${props => (props.height ? props.height : '43%')};
+export const Image = styled.img`
+  height: ${props => (props.height ? props.height : '36%')};
   width: auto;
   margin: 3px;
+`
+
+const ImageContainer = styled.div`
+  height: 100vh;
+  overflow: scroll;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: wrap;
 `
 
 const enhance = compose(
   withState('images', 'setImages', []),
   withState('activeImage', 'setActiveImage', ''),
+  withState('displayCirculation', 'setDisplayCirculation', false),
   withHandlers({
     fetchImages: ({ location, setImages }) => () => {
       fetch(`http://localhost:5000${location.pathname}`)
@@ -33,7 +44,7 @@ const enhance = compose(
 
     componentDidUpdate(prevProps) {
       if (prevProps.location.pathname !== this.props.location.pathname) {
-        // Must close the full-preview of the image if the route changes
+        // Closing preview if route changes
         if (this.props.activeImage) {
           this.props.setActiveImage('')
         }
@@ -43,35 +54,46 @@ const enhance = compose(
   }),
 )
 
-export const ImageView = enhance(({ images, activeImage, setActiveImage }) => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        overflow: 'scroll',
-        display: 'flex',
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-      }}
-    >
-      {/* This is probably not optimal, but going with this for now since images are chaced. */}
-      {activeImage ? (
-        <Overlay onCloseButtonPress={() => setActiveImage('')}>
-          <Image src={activeImage} height={'100%'} />
-        </Overlay>
-      ) : (
-        images.map((imagePath, i) => {
-          const fullPath = `http://localhost:5000${imagePath}`
-          return (
-            <Image
-              onClick={() => setActiveImage(fullPath)}
-              key={i}
-              src={fullPath}
+export const ImageView = enhance(
+  ({
+    images,
+    activeImage,
+    setActiveImage,
+    displayCirculation,
+    setDisplayCirculation,
+  }) => {
+    return (
+      <ImageContainer>
+        {images.length &&
+          displayCirculation && (
+            <ImageCirculation
+              images={images}
+              onStop={() => setDisplayCirculation(false)}
             />
-          )
-        })
-      )}
-    </div>
-  )
-})
+          )}
+        {activeImage ? (
+          <Overlay
+            topbarButtonPosition={'right'}
+            onCloseButtonPress={() => setActiveImage('')}
+          >
+            <Image src={activeImage} height={'86%'} />
+          </Overlay>
+        ) : (
+          images.map((imagePath, i) => {
+            const fullPath = `http://localhost:5000${imagePath}`
+            return (
+              <Image
+                onClick={event => {
+                  // here is information about the scroll position
+                  setActiveImage(fullPath)
+                }}
+                key={i}
+                src={fullPath}
+              />
+            )
+          })
+        )}
+      </ImageContainer>
+    )
+  },
+)
