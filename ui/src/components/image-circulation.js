@@ -8,14 +8,12 @@ const enhance = compose(
   withState('currentImage', 'setCurrentImage', ''),
   lifecycle({
     componentDidMount() {
-      // Using this as a counter for our images
       let imageIndex = 0
       const images = this.props.images
       const amountOfImages = images.length
       this.props.setCurrentImage(this.props.images[imageIndex])
       this.interval = setInterval(() => {
-        console.log('Changing image')
-        // Simple rotation inside the array of images
+        // Stepping through the images
         imageIndex = (imageIndex + 1) % amountOfImages
         this.props.setCurrentImage(images[imageIndex])
       }, 1000)
@@ -29,7 +27,7 @@ const enhance = compose(
 
 const StatelessImageCirculation = ({ currentImage, onStop }) => {
   return (
-    <Overlay onCloseButtonPress={() => onStop()}>
+    <Overlay topbarButtonPosition={'left'} onCloseButtonPress={() => onStop()}>
       <Image src={`http://localhost:5000${currentImage}`} height={'86%'} />
     </Overlay>
   )
