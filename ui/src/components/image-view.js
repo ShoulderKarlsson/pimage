@@ -5,7 +5,7 @@ import compose from 'recompose/compose'
 import withHandlers from 'recompose/withHandlers'
 import lifecycle from 'recompose/lifecycle'
 import withState from 'recompose/withState'
-import { Overlay } from './overlay'
+import { Overlay, Bar } from './overlay'
 import { ImageCirculation } from './image-circulation.js'
 
 export const Image = styled.img`
@@ -45,9 +45,12 @@ const enhance = compose(
     componentDidUpdate(prevProps) {
       if (prevProps.location.pathname !== this.props.location.pathname) {
         // Closing preview if route changes
-        if (this.props.activeImage) {
-          this.props.setActiveImage('')
-        }
+        if (this.props.activeImage) this.props.setActiveImage('')
+
+        // If switch from one route to another
+        // stop image circulation
+        if (this.props.display) this.props.setDisplayCirculation(false)
+
         this.props.fetchImages()
       }
     },
@@ -61,39 +64,41 @@ export const ImageView = enhance(
     setActiveImage,
     displayCirculation,
     setDisplayCirculation,
-  }) => {
-    return (
-      <ImageContainer>
-        {images.length &&
-          displayCirculation && (
-            <ImageCirculation
-              images={images}
-              onStop={() => setDisplayCirculation(false)}
-            />
-          )}
-        {activeImage ? (
-          <Overlay
-            topbarButtonPosition={'right'}
-            onCloseButtonPress={() => setActiveImage('')}
-          >
-            <Image src={activeImage} height={'86%'} />
-          </Overlay>
-        ) : (
-          images.map((imagePath, i) => {
-            const fullPath = `http://localhost:5000${imagePath}`
-            return (
-              <Image
-                onClick={event => {
-                  // here is information about the scroll position
-                  setActiveImage(fullPath)
-                }}
-                key={i}
-                src={fullPath}
-              />
-            )
-          })
+  }) => (
+    <ImageContainer>
+      {!activeImage &&
+        (!displayCirculation && (
+          <Bar
+            buttonPosition="left"
+            onButtonPress={() => setDisplayCirculation(true)}
+          />
+        ))}
+      {images.length &&
+        displayCirculation && (
+          <ImageCirculation
+            images={images}
+            onStop={() => setDisplayCirculation(false)}
+          />
         )}
-      </ImageContainer>
-    )
-  },
+      {activeImage ? (
+        <Overlay
+          topbarButtonPosition={'right'}
+          onButtonPress={() => setActiveImage('')}
+        >
+          <Image src={activeImage} height={'86%'} />
+        </Overlay>
+      ) : (
+        images.map((imagePath, i) => {
+          const fullPath = `http://localhost:5000${imagePath}`
+          return (
+            <Image
+              onClick={() => setActiveImage(fullPath)}
+              key={i}
+              src={fullPath}
+            />
+          )
+        })
+      )}
+    </ImageContainer>
+  ),
 )
