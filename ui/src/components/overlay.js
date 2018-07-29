@@ -26,16 +26,6 @@ const OverlayContainer = styled.div`
   align-items: center;
 `
 
-const Topbar = styled.div`
-  height: 10%;
-  width: 100%;
-  background-color: rgba(31, 34, 38, 0.65);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: ${props => translateButtonPosition(props.topbarButtonPosition)};
-`
-
 const Content = styled.div`
   height: 80%;
   width: 80%;
@@ -48,13 +38,30 @@ const Content = styled.div`
 export const Overlay = ({
   children,
   style = {},
-  onCloseButtonPress,
-  topbarButtonPosition,
+  onButtonPress,
+  buttonPosition,
 }) => (
   <OverlayContainer className="overlay-container" style={style}>
-    <Topbar topbarButtonPosition={topbarButtonPosition}>
+    <Bar buttonPosition={buttonPosition} onButtonPress={onButtonPress} />
+    <Content>{children}</Content>
+  </OverlayContainer>
+)
+
+export const Bar = ({ buttonPosition, onButtonPress }) => {
+  return (
+    <div
+      style={{
+        height: '10%',
+        width: '100%',
+        backgroundColor: 'rgba(31, 34, 38, 0.65)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: translateButtonPosition(buttonPosition),
+      }}
+    >
       <div
-        onClick={onCloseButtonPress}
+        onClick={onButtonPress}
         style={{
           height: '20px',
           width: '20px',
@@ -63,7 +70,6 @@ export const Overlay = ({
           marginRight: '12px',
         }}
       />
-    </Topbar>
-    <Content>{children}</Content>
-  </OverlayContainer>
-)
+    </div>
+  )
+}
