@@ -17,18 +17,14 @@ export const MainContent = () => {
   )
 }
 
-const DefaultMainContent = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        flex: 5,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <p>To View a image, select a folder form the sidebar!</p>
-    </div>
-  )
-}
+const DefaultMainContent = () => (
+  <div
+    style={{
+      height: '100vh',
+      flex: 5,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  />
+)
