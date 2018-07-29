@@ -2,6 +2,7 @@ import React from 'react'
 import { Route } from 'react-router-dom'
 import styled from 'styled-components'
 import { ImageView } from './image-view.js'
+import { Text } from './common.js'
 
 const MainContentContainer = styled.div`
   flex: 5;
@@ -26,5 +27,9 @@ const DefaultMainContent = () => (
       justifyContent: 'center',
       alignItems: 'center',
     }}
-  />
+  >
+    <Text size="large" color="white" style={{ textAlign: 'center' }}>
+      Select a folder on the left to view your images!
+    </Text>
+  </div>
 )
