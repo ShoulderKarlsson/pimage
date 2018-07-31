@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 
 const translateButtonPosition = position => {
   console.log('position', position)
+
   // Default position
   if (position === 'left') {
     return 'flex-start'
@@ -73,3 +74,35 @@ export const Bar = ({ buttonPosition, onButtonPress }) => {
     </div>
   )
 }
+
+const crossStyling = `
+.cross {
+  background: yellow;
+  top: 100px;
+  left: 100px;
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cross:before, .cross:after {
+  content: "";
+  position: absolute;
+  background: orange;
+}
+
+.cross:before {
+  height: 10px;
+  width: 50px;
+  transform: rotate(45deg);
+}
+
+.cross:after {
+  height: 10px;
+  width: 50px;
+  transform: rotate(-45deg);
+}
+`
