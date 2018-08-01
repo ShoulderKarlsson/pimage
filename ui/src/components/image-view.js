@@ -58,6 +58,20 @@ const enhance = compose(
   }),
 )
 
+const FullImage = ({ onClose, image }) => (
+  <Overlay onButtonPress={onClose}>
+    <Image src={image} height={'86%'} />
+  </Overlay>
+)
+
+const Images = ({ images, onImageClick }) =>
+  images.map((imagePath, i) => {
+    const fullPath = `http://localhost:5000${imagePath}`
+    return (
+      <Image onClick={() => onImageClick(fullPath)} key={i} src={fullPath} />
+    )
+  })
+
 export const ImageView = enhance(
   ({
     images,
@@ -65,42 +79,38 @@ export const ImageView = enhance(
     setActiveImage,
     displayCirculation,
     setDisplayCirculation,
-  }) => (
-    <ImageContainer>
-      {!activeImage &&
-        (!displayCirculation && (
+  }) => {
+    // If there is not a active image and there is not a image circulation currently active
+    const shouldDisplayGalleryBar = !activeImage && !displayCirculation
+
+    // If there is images loaded and the user has chosen to display the image circulation
+    const shouldDisplayImageCirculation = images.length && displayCirculation
+
+    // If the user has clicked on a image
+    const shouldDisplayFullImage = activeImage
+    return (
+      <ImageContainer>
+        {shouldDisplayGalleryBar && (
           <Bar
             onButtonPress={() => setDisplayCirculation(true)}
             Icon={PlayButtonWithLeftMargin}
           />
-        ))}
-
-      {/* If there is images and there is a circulation active, display circulation */}
-      {images.length &&
-        displayCirculation && (
+        )}
+        {shouldDisplayImageCirculation && (
           <ImageCirculation
             images={images}
             onStop={() => setDisplayCirculation(false)}
           />
         )}
-      {activeImage ? (
-        <Overlay
-          onButtonPress={() => setActiveImage('')}
-        >
-          <Image src={activeImage} height={'86%'} />
-        </Overlay>
-      ) : (
-        images.map((imagePath, i) => {
-          const fullPath = `http://localhost:5000${imagePath}`
-          return (
-            <Image
-              onClick={() => setActiveImage(fullPath)}
-              key={i}
-              src={fullPath}
-            />
-          )
-        })
-      )}
-    </ImageContainer>
-  ),
+        {shouldDisplayFullImage ? (
+          <FullImage onClose={() => setActiveImage('')} image={activeImage} />
+        ) : (
+          <Images
+            images={images}
+            onImageClick={image => setActiveImage(image)}
+          />
+        )}
+      </ImageContainer>
+    )
+  },
 )
