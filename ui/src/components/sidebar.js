@@ -30,7 +30,7 @@ const enhance = compose(
   })),
 )
 
-export const Sidebar = enhance(({ folderData, currentPath, ...props }) => {
+export const Sidebar = enhance(({ folderData, currentPath }) => {
   return (
     <SidebarContainer>
       {!folderData.length ? (
