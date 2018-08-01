@@ -2,6 +2,7 @@ import React from 'react'
 import { compose, withState, lifecycle } from 'recompose'
 import { Overlay } from './overlay.js'
 import { Image } from './image-view.js'
+import { CrossWithLeftMargin } from './common.js'
 
 const enhance = compose(
   withState('currentImage', 'setCurrentImage', ''),
@@ -26,7 +27,11 @@ const enhance = compose(
 
 const StatelessImageCirculation = ({ currentImage, onStop }) => {
   return (
-    <Overlay buttonPosition={'left'} onButtonPress={() => onStop()}>
+    <Overlay
+      buttonPosition={'left'}
+      onButtonPress={() => onStop()}
+      Icon={CrossWithLeftMargin}
+    >
       <Image src={`http://localhost:5000${currentImage}`} height={'86%'} />
     </Overlay>
   )

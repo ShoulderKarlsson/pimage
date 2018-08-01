@@ -5,8 +5,9 @@ import compose from 'recompose/compose'
 import withHandlers from 'recompose/withHandlers'
 import lifecycle from 'recompose/lifecycle'
 import withState from 'recompose/withState'
-import { Overlay, Bar } from './overlay'
-import { ImageCirculation } from './image-circulation.js'
+import { Overlay } from './overlay'
+import { ImageCirculation } from './image-circulation'
+import { PlayButtonWithLeftMargin, Bar } from './common'
 
 export const Image = styled.img`
   height: ${props => (props.height ? props.height : '36%')};
@@ -69,10 +70,12 @@ export const ImageView = enhance(
       {!activeImage &&
         (!displayCirculation && (
           <Bar
-            buttonPosition="left"
             onButtonPress={() => setDisplayCirculation(true)}
+            Icon={PlayButtonWithLeftMargin}
           />
         ))}
+
+      {/* If there is images and there is a circulation active, display circulation */}
       {images.length &&
         displayCirculation && (
           <ImageCirculation
@@ -82,7 +85,7 @@ export const ImageView = enhance(
         )}
       {activeImage ? (
         <Overlay
-          topbarButtonPosition={'right'}
+          buttonPosition={'left'}
           onButtonPress={() => setActiveImage('')}
         >
           <Image src={activeImage} height={'86%'} />
