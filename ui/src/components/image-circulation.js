@@ -28,7 +28,6 @@ const enhance = compose(
 const StatelessImageCirculation = ({ currentImage, onStop }) => {
   return (
     <Overlay
-      buttonPosition={'left'}
       onButtonPress={() => onStop()}
       Icon={CrossWithLeftMargin}
     >

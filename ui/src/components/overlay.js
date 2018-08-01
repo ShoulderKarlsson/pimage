@@ -25,7 +25,6 @@ export const Overlay = ({
   children,
   style = {},
   onButtonPress,
-  buttonPosition,
 }) => (
   <OverlayContainer className="overlay-container" style={style}>
     <Bar onButtonPress={onButtonPress} Icon={CrossWithLeftMargin} />

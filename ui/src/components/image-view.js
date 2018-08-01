@@ -85,7 +85,6 @@ export const ImageView = enhance(
         )}
       {activeImage ? (
         <Overlay
-          buttonPosition={'left'}
           onButtonPress={() => setActiveImage('')}
         >
           <Image src={activeImage} height={'86%'} />
