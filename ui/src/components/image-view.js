@@ -9,12 +9,6 @@ import { Overlay } from './overlay'
 import { ImageCirculation } from './image-circulation'
 import { PlayButtonWithLeftMargin, Bar } from './common'
 
-// export const Image = styled.img`
-//   height: ${props => (props.height ? props.height : '36%')};
-//   width: auto;
-//   margin: 3px;
-// `
-
 const ImageContainer = styled.div`
   height: 100vh;
   overflow: scroll;
@@ -81,7 +75,6 @@ const Images = ({ images, onImageClick }) =>
   images.map((imagePath, i) => {
     const fullPath = `http://localhost:5000${imagePath}`
     return (
-      // <SuperImage imagePath={fullPath} />
       <Image onClick={() => onImageClick(fullPath)} key={i} src={fullPath} />
     )
   })
@@ -112,11 +105,7 @@ export const ImageView = enhance(
             />
           )}
         </TopSection>
-        <BottomSection
-          flex={6}
-          className="bottom"
-          style={{ backgroundColor: 'purple' }}
-        >
+        <BottomSection flex={6} className="bottom">
           {shouldDisplayImageCirculation && (
             <ImageCirculation
               images={images}
@@ -153,10 +142,3 @@ const ImageWrapper = styled.div`
   background-color: rgba(60, 40, 1, 0.5);
   margin: 3px;
 `
-// const Image = ({ imagePath }) => {
-//   return (
-//     <ImageWrapper>
-//       <SuperDiv src={imagePath} />
-//     </ImageWrapper>
-//   )
-// }
