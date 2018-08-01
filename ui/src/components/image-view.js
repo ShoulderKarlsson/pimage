@@ -9,18 +9,31 @@ import { Overlay } from './overlay'
 import { ImageCirculation } from './image-circulation'
 import { PlayButtonWithLeftMargin, Bar } from './common'
 
-export const Image = styled.img`
-  height: ${props => (props.height ? props.height : '36%')};
-  width: auto;
-  margin: 3px;
-`
+// export const Image = styled.img`
+//   height: ${props => (props.height ? props.height : '36%')};
+//   width: auto;
+//   margin: 3px;
+// `
 
 const ImageContainer = styled.div`
   height: 100vh;
   overflow: scroll;
   display: flex;
   justify-content: space-around;
-  flex-direction: row;
+  flex-direction: column;
+`
+
+const Section = styled.div`
+  flex: ${props => props.flex};
+`
+
+const TopSection = styled(Section)`
+  display: flex;
+  align-items: center;
+`
+
+const BottomSection = styled(Section)`
+  display: flex;
   flex-wrap: wrap;
 `
 
@@ -68,6 +81,7 @@ const Images = ({ images, onImageClick }) =>
   images.map((imagePath, i) => {
     const fullPath = `http://localhost:5000${imagePath}`
     return (
+      // <SuperImage imagePath={fullPath} />
       <Image onClick={() => onImageClick(fullPath)} key={i} src={fullPath} />
     )
   })
@@ -90,27 +104,59 @@ export const ImageView = enhance(
     const shouldDisplayFullImage = activeImage
     return (
       <ImageContainer>
-        {shouldDisplayGalleryBar && (
-          <Bar
-            onButtonPress={() => setDisplayCirculation(true)}
-            Icon={PlayButtonWithLeftMargin}
-          />
-        )}
-        {shouldDisplayImageCirculation && (
-          <ImageCirculation
-            images={images}
-            onStop={() => setDisplayCirculation(false)}
-          />
-        )}
-        {shouldDisplayFullImage ? (
-          <FullImage onClose={() => setActiveImage('')} image={activeImage} />
-        ) : (
-          <Images
-            images={images}
-            onImageClick={image => setActiveImage(image)}
-          />
-        )}
+        <TopSection flex={1}>
+          {shouldDisplayGalleryBar && (
+            <Bar
+              onButtonPress={() => setDisplayCirculation(true)}
+              Icon={PlayButtonWithLeftMargin}
+            />
+          )}
+        </TopSection>
+        <BottomSection
+          flex={6}
+          className="bottom"
+          style={{ backgroundColor: 'purple' }}
+        >
+          {shouldDisplayImageCirculation && (
+            <ImageCirculation
+              images={images}
+              onStop={() => setDisplayCirculation(false)}
+            />
+          )}
+          {shouldDisplayFullImage ? (
+            <FullImage onClose={() => setActiveImage('')} image={activeImage} />
+          ) : (
+            <Images
+              images={images}
+              onImageClick={image => setActiveImage(image)}
+            />
+          )}
+        </BottomSection>
       </ImageContainer>
     )
   },
 )
+
+export const Image = ({ src, onClick }) => (
+  <ImageWrapper>
+    <CustomImage src={src} onClick={onClick} />
+  </ImageWrapper>
+)
+
+const CustomImage = styled.img`
+  width: 100%;
+  height: auto;
+`
+const ImageWrapper = styled.div`
+  width: 312px;
+  max-height: 206px;
+  background-color: rgba(60, 40, 1, 0.5);
+  margin: 3px;
+`
+// const Image = ({ imagePath }) => {
+//   return (
+//     <ImageWrapper>
+//       <SuperDiv src={imagePath} />
+//     </ImageWrapper>
+//   )
+// }
