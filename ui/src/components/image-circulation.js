@@ -1,8 +1,6 @@
 import React from 'react'
 import { compose, withState, lifecycle } from 'recompose'
-import { Overlay } from './overlay.js'
-import { Image } from './image-view.js'
-import { CrossWithLeftMargin } from './common.js'
+import { Image, CustomImage } from './image-view.js'
 
 const enhance = compose(
   withState('currentImage', 'setCurrentImage', ''),
@@ -25,14 +23,11 @@ const enhance = compose(
   }),
 )
 
-const StatelessImageCirculation = ({ currentImage, onStop }) => {
+const StatelessImageCirculation = ({ currentImage }) => {
   return (
-    <Overlay
-      onButtonPress={() => onStop()}
-      Icon={CrossWithLeftMargin}
-    >
-      <Image src={`http://localhost:5000${currentImage}`} height={'86%'} />
-    </Overlay>
+    <div className='image-cicrle-container' style={{background: 'orange', height: '100%', width: 'auto'}}>
+      <CustomImage src={`http://localhost:5000${currentImage}`} />
+    </div>
   )
 }
 
