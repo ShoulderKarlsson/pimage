@@ -1,4 +1,4 @@
 # pimage
 
 
-Simple digital image fram running inside a Raspberry pi!
+Simple digital image frame running inside a Raspberry pi!
