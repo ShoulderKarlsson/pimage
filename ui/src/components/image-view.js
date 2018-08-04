@@ -101,12 +101,9 @@ const ImageViewMainContent = ({
   }
 
   return activeImage ? (
-    <div
-      className="full-image-container"
-      style={{ background: 'orange', height: '100%', width: '100%' }}
-    >
+    <ImageWrapper fillParent>
       <CustomImage src={activeImage} />
-    </div>
+    </ImageWrapper>
   ) : (
     <Images images={images} onImageClick={image => onImageClick(image)} />
   )
@@ -122,7 +119,7 @@ export const ImageView = enhance(
   }) => {
     return (
       <ImageContainer>
-        <TopSection flex={1} className="top">
+        <TopSection flex={1}>
           <ImageViewTopbar
             toggleImageCirculation={setDisplayCirculation}
             displayActiveImageBar={activeImage}
@@ -130,7 +127,7 @@ export const ImageView = enhance(
             resetImage={() => setActiveImage('')}
           />
         </TopSection>
-        <BottomSection flex={6} className="bottom">
+        <BottomSection flex={6}>
           <ImageViewMainContent
             images={images}
             activeImage={activeImage}
@@ -153,9 +150,16 @@ export const CustomImage = styled.img`
   width: 100%;
   height: auto;
 `
-const ImageWrapper = styled.div`
-  width: 306px;
-  max-height: 206px;
-  background-color: rgba(60, 40, 1, 0.5);
-  margin: 3px;
-`
+
+const ImageWrapper = ({ fillParent, children }) => {
+  const wrapperDefaultStyles = {
+    maxHeight: '206px',
+    width: '306px',
+    backgroundColor: 'rgba(60, 40, 1, 0.5)',
+    margin: '3px',
+  }
+  const styles = fillParent
+    ? { ...wrapperDefaultStyles, ...{ height: '100%', width: '100%' } }
+    : wrapperDefaultStyles
+  return <div style={styles}>{children}</div>
+}
