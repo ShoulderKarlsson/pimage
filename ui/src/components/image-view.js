@@ -30,7 +30,7 @@ const TopSection = styled(Section)`
 const BottomSection = styled(Section)`
   display: flex;
   flex-wrap: wrap;
-  height: 100%
+  height: 100%;
 `
 
 const enhance = compose(
@@ -67,13 +67,13 @@ const enhance = compose(
   }),
 )
 
-const FullImage = ({ onClose, image }) => {
-  return (
-    <Overlay onButtonPress={onClose}>
-      <Image src={image} />
-    </Overlay>
-  )
-}
+// const FullImage = ({ onClose, image }) => {
+//   return (
+//     <Overlay onButtonPress={onClose}>
+//       <Image src={image} />
+//     </Overlay>
+//   )
+// }
 
 const Images = ({ images, onImageClick }) =>
   images.map((imagePath, i) => {
@@ -83,6 +83,23 @@ const Images = ({ images, onImageClick }) =>
     )
   })
 
+const ImageViewTopbar = ({
+  displayActiveImageBar,
+  displayCirculationBar,
+  toggleImageCirculation,
+  resetImage,
+}) =>
+  displayActiveImageBar ? (
+    <Bar onButtonPress={resetImage} Icon={CrossWithLeftMargin} />
+  ) : (
+    <Bar
+      onButtonPress={() => toggleImageCirculation(!displayCirculationBar)}
+      Icon={
+        displayCirculationBar ? CrossWithLeftMargin : PlayButtonWithLeftMargin
+      }
+    />
+  )
+
 export const ImageView = enhance(
   ({
     images,
@@ -91,30 +108,7 @@ export const ImageView = enhance(
     displayCirculation,
     setDisplayCirculation,
   }) => {
-    const getTopbar = () => {
-      if (activeImage) {
-        return (
-          <Bar
-            onButtonPress={() => setActiveImage('')}
-            Icon={CrossWithLeftMargin}
-          />
-        )
-      }
-
-      return displayCirculation ? (
-        <Bar
-          onButtonPress={() => {
-            setDisplayCirculation(false)
-          }}
-          Icon={CrossWithLeftMargin}
-        />
-      ) : (
-        <Bar
-          onButtonPress={() => setDisplayCirculation(true)}
-          Icon={PlayButtonWithLeftMargin}
-        />
-      )
-    }
+    // const getTopbar = () => {}
 
     const getMainContent = () => {
       if (displayCirculation) {
@@ -133,41 +127,33 @@ export const ImageView = enhance(
       )
     }
 
-    // If there is not a active image and there is not a image circulation currently active
-
     // If there is images loaded and the user has chosen to display the image circulation
-    const shouldDisplayImageCirculation = images.length && displayCirculation
+    // const shouldDisplayImageCirculation = images.length && displayCirculation
 
     // If the user has clicked on a image
-    const shouldDisplayFullImage = activeImage
+    // const shouldDisplayFullImage = activeImage
     return (
       <ImageContainer>
         <TopSection flex={1} className="top">
-          {getTopbar()}
+          <ImageViewTopbar
+            toggleImageCirculation={setDisplayCirculation}
+            displayActiveImageBar={activeImage}
+            displayCirculationBar={displayCirculation}
+            resetImage={() => setActiveImage('')}
+          />
         </TopSection>
         <BottomSection flex={6} className="bottom">
           {getMainContent()}
-          {/* 
-          {shouldDisplayImageCirculation && (
-            <ImageCirculation
-              images={images}
-              onStop={() => setDisplayCirculation(false)}
-            />
-          )}
-          {shouldDisplayFullImage ? (
-            <FullImage onClose={() => setActiveImage('')} image={activeImage} />
-          ) : (
-            <Images
-              images={images}
-              onImageClick={image => setActiveImage(image)}
-            />
-          )}
-         */}
         </BottomSection>
       </ImageContainer>
     )
   },
 )
+
+// activeImage,
+// displayCirculation,
+// toggleImageCirculation,
+// setActiveImage,
 
 export const Image = ({ src, onClick = () => {} }) => (
   <ImageWrapper>
@@ -180,7 +166,7 @@ export const CustomImage = styled.img`
   height: auto;
 `
 const ImageWrapper = styled.div`
-  width: 312px;
+  width: 306px;
   max-height: 206px;
   background-color: rgba(60, 40, 1, 0.5);
   margin: 3px;
