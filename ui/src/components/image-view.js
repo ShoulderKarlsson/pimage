@@ -100,6 +100,28 @@ const ImageViewTopbar = ({
     />
   )
 
+const ImageViewMainContent = ({
+  activeImageCirculation,
+  images,
+  activeImage,
+  onImageClick,
+}) => {
+  if (activeImageCirculation) {
+    return <ImageCirculation images={images} />
+  }
+
+  return activeImage ? (
+    <div
+      className="full-image-container"
+      style={{ background: 'orange', height: '100%', width: '100%' }}
+    >
+      <CustomImage src={activeImage} />
+    </div>
+  ) : (
+    <Images images={images} onImageClick={image => onImageClick(image)} />
+  )
+}
+
 export const ImageView = enhance(
   ({
     images,
@@ -108,24 +130,22 @@ export const ImageView = enhance(
     displayCirculation,
     setDisplayCirculation,
   }) => {
-    // const getTopbar = () => {}
+    // const getMainContent = () => {
+    //   if (displayCirculation) {
+    //     return <ImageCirculation images={images} />
+    //   }
 
-    const getMainContent = () => {
-      if (displayCirculation) {
-        return <ImageCirculation images={images} />
-      }
-
-      return activeImage ? (
-        <div
-          className="full-image-container"
-          style={{ background: 'orange', height: '100%', width: '100%' }}
-        >
-          <CustomImage src={activeImage} />
-        </div>
-      ) : (
-        <Images images={images} onImageClick={image => setActiveImage(image)} />
-      )
-    }
+    //   return activeImage ? (
+    //     <div
+    //       className="full-image-container"
+    //       style={{ background: 'orange', height: '100%', width: '100%' }}
+    //     >
+    //       <CustomImage src={activeImage} />
+    //     </div>
+    //   ) : (
+    //     <Images images={images} onImageClick={image => setActiveImage(image)} />
+    //   )
+    // }
 
     // If there is images loaded and the user has chosen to display the image circulation
     // const shouldDisplayImageCirculation = images.length && displayCirculation
@@ -143,17 +163,17 @@ export const ImageView = enhance(
           />
         </TopSection>
         <BottomSection flex={6} className="bottom">
-          {getMainContent()}
+          <ImageViewMainContent
+            images={images}
+            activeImage={activeImage}
+            onImageClick={setActiveImage}
+            activeImageCirculation={displayCirculation}
+          />
         </BottomSection>
       </ImageContainer>
     )
   },
 )
-
-// activeImage,
-// displayCirculation,
-// toggleImageCirculation,
-// setActiveImage,
 
 export const Image = ({ src, onClick = () => {} }) => (
   <ImageWrapper>
