@@ -1,6 +1,7 @@
 import React from 'react'
 import { compose, withState, lifecycle } from 'recompose'
-import { Image, CustomImage } from './image-view.js'
+import { CustomImage } from './image-view'
+import { ImageWrapper } from './common.js'
 
 const enhance = compose(
   withState('currentImage', 'setCurrentImage', ''),
@@ -23,12 +24,10 @@ const enhance = compose(
   }),
 )
 
-const StatelessImageCirculation = ({ currentImage }) => {
-  return (
-    <div className='image-cicrle-container' style={{background: 'orange', height: '100%', width: 'auto'}}>
-      <CustomImage src={`http://localhost:5000${currentImage}`} />
-    </div>
-  )
-}
+const StatelessImageCirculation = ({ currentImage }) => (
+  <ImageWrapper fillParent>
+    <CustomImage src={`http://localhost:5000${currentImage}`} />
+  </ImageWrapper>
+)
 
 export const ImageCirculation = enhance(StatelessImageCirculation)

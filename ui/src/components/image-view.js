@@ -151,7 +151,7 @@ export const CustomImage = styled.img`
   height: auto;
 `
 
-const ImageWrapper = ({ fillParent, children }) => {
+export const ImageWrapper = ({ fillParent, children }) => {
   const wrapperDefaultStyles = {
     maxHeight: '206px',
     width: '306px',

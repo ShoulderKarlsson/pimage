@@ -48,7 +48,7 @@ export const Cross = styled.div`
 export const Bar = ({ onButtonPress, Icon }) => (
   <div
     style={{
-      height: '10%',
+      height: '80%',
       width: '100%',
       backgroundColor: 'rgba(31, 34, 38, 0.65)',
       display: 'flex',
@@ -68,3 +68,16 @@ const attachMarginTo = Component => styled(Component)`
 
 export const PlayButtonWithLeftMargin = attachMarginTo(PlayButton)
 export const CrossWithLeftMargin = attachMarginTo(Cross)
+
+export const ImageWrapper = ({ fillParent, children }) => {
+  const wrapperDefaultStyles = {
+    maxHeight: '206px',
+    width: '306px',
+    backgroundColor: 'rgba(60, 40, 1, 0.5)',
+    margin: '3px',
+  }
+  const styles = fillParent
+    ? { ...wrapperDefaultStyles, ...{ height: '100%', width: '100%' } }
+    : wrapperDefaultStyles
+  return <div style={styles}>{children}</div>
+}
