@@ -6,7 +6,7 @@ import withHandlers from 'recompose/withHandlers'
 import lifecycle from 'recompose/lifecycle'
 import withState from 'recompose/withState'
 import { ImageCirculation } from './image-circulation'
-import { PlayButtonWithLeftMargin, Bar, CrossWithLeftMargin } from './common'
+import { PlayButtonWithLeftMargin, Bar, CrossWithLeftMargin, ImageWrapper } from './common'
 
 const ImageContainer = styled.div`
   height: 100vh;
@@ -151,15 +151,3 @@ export const CustomImage = styled.img`
   height: auto;
 `
 
-export const ImageWrapper = ({ fillParent, children }) => {
-  const wrapperDefaultStyles = {
-    maxHeight: '206px',
-    width: '306px',
-    backgroundColor: 'rgba(60, 40, 1, 0.5)',
-    margin: '3px',
-  }
-  const styles = fillParent
-    ? { ...wrapperDefaultStyles, ...{ height: '100%', width: '100%' } }
-    : wrapperDefaultStyles
-  return <div style={styles}>{children}</div>
-}
