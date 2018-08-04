@@ -5,10 +5,8 @@ import compose from 'recompose/compose'
 import withHandlers from 'recompose/withHandlers'
 import lifecycle from 'recompose/lifecycle'
 import withState from 'recompose/withState'
-import { Overlay } from './overlay'
 import { ImageCirculation } from './image-circulation'
 import { PlayButtonWithLeftMargin, Bar, CrossWithLeftMargin } from './common'
-import { mapProps } from 'recompose'
 
 const ImageContainer = styled.div`
   height: 100vh;
@@ -67,14 +65,6 @@ const enhance = compose(
   }),
 )
 
-// const FullImage = ({ onClose, image }) => {
-//   return (
-//     <Overlay onButtonPress={onClose}>
-//       <Image src={image} />
-//     </Overlay>
-//   )
-// }
-
 const Images = ({ images, onImageClick }) =>
   images.map((imagePath, i) => {
     const fullPath = `http://localhost:5000${imagePath}`
@@ -130,28 +120,6 @@ export const ImageView = enhance(
     displayCirculation,
     setDisplayCirculation,
   }) => {
-    // const getMainContent = () => {
-    //   if (displayCirculation) {
-    //     return <ImageCirculation images={images} />
-    //   }
-
-    //   return activeImage ? (
-    //     <div
-    //       className="full-image-container"
-    //       style={{ background: 'orange', height: '100%', width: '100%' }}
-    //     >
-    //       <CustomImage src={activeImage} />
-    //     </div>
-    //   ) : (
-    //     <Images images={images} onImageClick={image => setActiveImage(image)} />
-    //   )
-    // }
-
-    // If there is images loaded and the user has chosen to display the image circulation
-    // const shouldDisplayImageCirculation = images.length && displayCirculation
-
-    // If the user has clicked on a image
-    // const shouldDisplayFullImage = activeImage
     return (
       <ImageContainer>
         <TopSection flex={1} className="top">
